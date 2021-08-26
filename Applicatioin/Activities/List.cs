@@ -1,0 +1,33 @@
+using System.Collections.Generic;
+using MediatR;
+using Domain;
+using System.Threading.Tasks;
+using System.Threading;
+using static Applicatioin.Activities.List;
+using Persistance;
+using Microsoft.EntityFrameworkCore;
+
+namespace Applicatioin.Activities
+{
+    public class List
+    {
+        public class Query : IRequest<List<Activity>> {}
+
+        public class Handler : IRequestHandler<Query, List<Activity>>
+    {
+        private readonly DataContext _context;
+
+        public Handler(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
+        {
+            return await _context.Activities.ToListAsync();
+        }
+    }
+    }
+
+    
+}
