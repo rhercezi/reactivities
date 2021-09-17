@@ -6,14 +6,15 @@ using System.Threading;
 using static Applicatioin.Activities.List;
 using Persistance;
 using Microsoft.EntityFrameworkCore;
+using Applicatioin.Core;
 
 namespace Applicatioin.Activities
 {
     public class List
     {
-        public class Query : IRequest<List<Activity>> {}
+        public class Query : IRequest<Resault<List<Activity>>> {}
 
-        public class Handler : IRequestHandler<Query, List<Activity>>
+        public class Handler : IRequestHandler<Query, Resault<List<Activity>>>
     {
         private readonly DataContext _context;
 
@@ -22,9 +23,11 @@ namespace Applicatioin.Activities
             _context = context;
         }
 
-        public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Resault<List<Activity>>> Handle(Query request, CancellationToken cancellationToken)
         {
-            return await _context.Activities.ToListAsync();
+            var activity = await _context.Activities.ToListAsync();
+
+            return Resault<List<Activity>>.Succes(activity);
         }
     }
     }
